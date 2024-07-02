@@ -52,7 +52,7 @@ const Form = ({ onSubmit }) => {
           </div>
           {/* Datos */}
           <div className="row mx-3">
-            <div className="col">
+            <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
                 <input type="text" className="form-control" id="floatingInput" placeholder="" {...register('legajo')} />
                 <label className="col-form-label-sm" for="floatingInput"> N° Legajo/CUIT </label>
@@ -166,7 +166,7 @@ const Form = ({ onSubmit }) => {
       <div className="card">
         <h5 className="card-header fs-6">2. Para ser completado por el Autorizante</h5>
         <div className="card-body">
-          <h5 className="card-title fs-6 fw-semibold text-start ps-4 pb-2">&nbsp;Autorización de Comisión de Servicios</h5>
+          <h5 className="card-title fw-semibold text-start px-4 py-2">&nbsp;Autorización de Comisión de Servicios</h5>
           {/* Datos Pedido */}
           <div className="row mx-3">
             <div className="col-12 col-md-12 col-lg-5">
@@ -277,7 +277,7 @@ const Form = ({ onSubmit }) => {
       <div className="card">
         <h5 className="card-header fs-6">3. Despacho/Decanato</h5>
         <div className="card-body">
-          <h5 className="card-title fs-6 fw-semibold text-start ps-4 pb-2">&nbsp;Protocolización de la Comisión de Servicios</h5>
+          <h5 className="card-title fw-semibold text-start px-4 py-2">Protocolización de la Comisión de Servicios</h5>
           {/* Firma */}
           <div className="row mx-3">
             <div className="col-12 col-md-4">
@@ -306,7 +306,7 @@ const Form = ({ onSubmit }) => {
       <div className="card">
         <h5 className="card-header fs-6">4. Para ser completado por el responsable económico</h5>
         <div className="card-body">
-          <h5 className="card-title fs-6 fw-semibold text-start ps-4 pb-2">&nbsp;Pago de Viáticos y Pasajes - Responsable Económico del Proyecto de Investigación</h5>
+          <h5 className="card-title fw-semibold text-start px-4 py-2">Pago de Viáticos y Pasajes - Responsable Económico del Proyecto de Investigación</h5>
           {/* Viáticos */}
           <div className="row mx-3">
             <div className="col-12 col-lg-3 col-md-6">
@@ -392,7 +392,7 @@ const Form = ({ onSubmit }) => {
       <div className="card">
         <h5 className="card-header fs-6">5. Personal</h5>
         <div className="card-body">
-          <h5 className="card-title fs-6 fw-semibold text-start ps-4 pb-2">&nbsp;Registro de la Comisión de Servicios en el SIU-PAMPA</h5>
+          <h5 className="card-title fw-semibold text-start px-4 py-2">Registro de la Comisión de Servicios en el SIU-PAMPA</h5>
           {/* Firma */}
           <div className="row mx-3">
             <div className="col-12 col-lg-4">

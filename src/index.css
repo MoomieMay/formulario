@@ -65,3 +65,29 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
     }
 input[type=number] { -appearance:textfield; }
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 5px; /* Reducir el padding para pantallas móviles */
+  }
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .col-12 {
+    padding: 5px; /* Reducir el padding para pantallas móviles */
+  }
+}
+
+
+/* Estilos base para los card-title */
+.card-title {
+  font-size: 1rem; /* Tamaño de letra base */
+}
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .card-title {
+    font-size: 0.875rem; /* Reducir el tamaño de letra para pantallas móviles */
+  }
+}
