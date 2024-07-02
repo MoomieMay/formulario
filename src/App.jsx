@@ -19,7 +19,7 @@ const App = () => {
       <Header />
       <Form onSubmit={handleFormSubmit} />
       {formData && (
-        <PDFDownloadLink document={<PDFDocument data={formData} />} fileName="form.pdf">
+        <PDFDownloadLink document={<PDFDocument data={formData} />} fileName="cs_uaco.pdf">
           {({ loading }) => (loading ? 'Generando PDF...' : 'Descargar PDF')}
         </PDFDownloadLink>
       )}
