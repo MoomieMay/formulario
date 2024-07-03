@@ -4,6 +4,10 @@ import { useForm } from 'react-hook-form';
 
 const Form = ({ onSubmit }) => {
   const { register, handleSubmit } = useForm();
+  // Estado para habilitar o deshabilitar las tarjetas
+  const [isDisabled, setIsDisabled] = React.useState(true);
+
+
 
   return (
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
@@ -273,8 +277,10 @@ const Form = ({ onSubmit }) => {
         </div>
       </div>
 
+
+
       {/* Tarjeta Despacho/Decanato */}
-      <div className="card">
+      <div className={`card ${isDisabled ? 'card-disabled' : ''}`}>
         <h5 className="card-header fs-6">3. Despacho/Decanato</h5>
         <div className="card-body">
           <h5 className="card-title fw-semibold text-start px-4 py-2">Protocolización de la Comisión de Servicios</h5>
@@ -389,7 +395,7 @@ const Form = ({ onSubmit }) => {
       </div>
 
       {/* Tarjeta Personal */}
-      <div className="card">
+      <div className={`card ${isDisabled ? 'card-disabled' : ''}`}>
         <h5 className="card-header fs-6">5. Personal</h5>
         <div className="card-body">
           <h5 className="card-title fw-semibold text-start px-4 py-2">Registro de la Comisión de Servicios en el SIU-PAMPA</h5>

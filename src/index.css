@@ -91,3 +91,8 @@ input[type=number] { -appearance:textfield; }
     font-size: 0.875rem; /* Reducir el tamaño de letra para pantallas móviles */
   }
 }
+
+.card-disabled {
+  opacity: 0.5; /* Reduce la opacidad para dar la apariencia de deshabilitado */
+  pointer-events: none; /* Desactiva la interacción con la tarjeta */
+}
