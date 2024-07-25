@@ -1,6 +1,4 @@
-// src/components/Header.js
 import React from 'react';
-
 
 const Header = () => {
   return (
@@ -9,11 +7,11 @@ const Header = () => {
         <div class="row w-100">
           <div class="col-auto ">
             <a class="navbar-brand" href="https://www.uaco.unpa.edu.ar">
-              <img src="/logo.png" height="45" class="d-inline-block align-top" alt="" />
+              <img src="/logo.png" height="60" class="d-inline-block align-top my-2" alt="" />
             </a>
           </div>
           <div class="col text-start d-flex align-items-center">
-            <p class="mb-0">
+            <p class="mb-0 fs-5 header-title">
               Solicitud Y Rendición de Comisión de Servicios, Viáticos y Pasajes – PI – SECYT
             </p>
           </div>

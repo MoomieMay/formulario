@@ -1,13 +1,22 @@
-// src/components/Form.js
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PDFDocument from './PDFdocument.jsx';
 
-const Form = ({ onSubmit }) => {
-  const { register, handleSubmit } = useForm();
-  // Estado para habilitar o deshabilitar las tarjetas
-  const [isDisabled, setIsDisabled] = React.useState(true);
+const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm }) => {
+  const { register, handleSubmit, reset } = useForm();
+  const [fieldDisabled, setfieldDisabled] = React.useState(true);
 
-
+  const handleButtonClick = () => {
+    if (formData) {
+      // Reset the form if formData is present
+      reset();
+      handleResetForm();
+    } else {
+      // Submit the form
+      handleSubmit(onSubmit)();
+    }
+  };
 
   return (
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
@@ -16,15 +25,15 @@ const Form = ({ onSubmit }) => {
         <div className="row">
           <div className="col-12 col-md-4 mb-3">
             <label className="col-form-label-sm">Apellido/s</label>
-            <input className="form-control" {...register('apellido', { required: true })} />
+            <input className="form-control" {...register('apellido', { required: false })} />
           </div>
           <div className="col-12 col-md-4 mb-3">
             <label className="col-form-label-sm">Nombres (Completo)</label>
-            <input className="form-control" {...register('nombre', { required: true })} />
+            <input className="form-control" {...register('nombre', { required: false })} />
           </div>
           <div className="col-12 col-md-4 mb-3">
             <label className="col-form-label-sm">Fecha de Solicitud</label>
-            <input className="form-control" type='date' {...register('fechaSolicitud', { required: true })} />
+            <input className="form-control" type='date' {...register('fechaSolicitud', { required: false })} />
           </div>
         </div>
       </div>
@@ -175,7 +184,7 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-md-12 col-lg-5">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled}/>
                 <label className="col-form-label-sm" for="floatingInput"> Cargo </label>
               </div>
             </div>
@@ -238,7 +247,7 @@ const Form = ({ onSubmit }) => {
 
             <div className="col-12 col-md-4 col-lg-3">
               <div className="form-floating">
-                <input type="date" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="date" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Fecha de Autorización </label>
               </div>
             </div>
@@ -247,13 +256,13 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled}/>
                 <label className="col-form-label-sm" for="floatingInput"> Apellido del Autorizante </label>
               </div>
             </div>
             <div className="col-12 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="text" className="form-control" id="floatingPassword" disabled={fieldDisabled}/>
                 <label className="col-form-label-sm" for="floatingPassword"> Nombres del Autorizante </label>
               </div>
             </div>
@@ -262,13 +271,13 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Firma del Autorizante </label>
               </div>
             </div>
             <div className="col-12 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="text" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Sello/Aclaración </label>
               </div>
             </div>
@@ -280,7 +289,7 @@ const Form = ({ onSubmit }) => {
 
 
       {/* Tarjeta Despacho/Decanato */}
-      <div className={`card ${isDisabled ? 'card-disabled' : ''}`}>
+      <div className="card">
         <h5 className="card-header fs-6">3. Despacho/Decanato</h5>
         <div className="card-body">
           <h5 className="card-title fw-semibold text-start px-4 py-2">Protocolización de la Comisión de Servicios</h5>
@@ -288,19 +297,19 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-md-4">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Firma Departamento de Despacho </label>
               </div>
             </div>
             <div className="col-12 col-md-4">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled}/>
                 <label className="col-form-label-sm" for="floatingInput"> Unidad de Gestión </label>
               </div>
             </div>
             <div className="col-12 col-md-4">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="text" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Sello/Aclaración </label>
               </div>
             </div>
@@ -317,25 +326,25 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Total Viáticos Liquidados ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="number" className="form-control" id="floatingInput" placeholder="" />
                 <label className="col-form-label-sm" for="floatingInput"> Cantidad de Días </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" value={5000} disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Monto Diario del Viático ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="date" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="date" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Fecha de Pago </label>
               </div>
             </div>
@@ -344,25 +353,25 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Total Gastos de Movilidad </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" placeholder="" />
                 <label className="col-form-label-sm" for="floatingInput"> Pasajes Aereos ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" placeholder="" />
                 <label className="col-form-label-sm" for="floatingInput"> Pasajes Terrestres ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="text" className="form-control" id="floatingPassword" placeholder="" />
                 <label className="col-form-label-sm" for="floatingPassword"> Combustible ($) </label>
               </div>
             </div>
@@ -371,7 +380,7 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Observaciones </label>
               </div>
             </div>
@@ -380,13 +389,13 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Firma del Beneficiario </label>
               </div>
             </div>
             <div className="col-12 col-md-6">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="text" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Aclaración </label>
               </div>
             </div>
@@ -395,7 +404,7 @@ const Form = ({ onSubmit }) => {
       </div>
 
       {/* Tarjeta Personal */}
-      <div className={`card ${isDisabled ? 'card-disabled' : ''}`}>
+      <div className="card">
         <h5 className="card-header fs-6">5. Personal</h5>
         <div className="card-body">
           <h5 className="card-title fw-semibold text-start px-4 py-2">Registro de la Comisión de Servicios en el SIU-PAMPA</h5>
@@ -403,19 +412,19 @@ const Form = ({ onSubmit }) => {
           <div className="row mx-3">
             <div className="col-12 col-lg-4">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                <input type="text" className="form-control" id="floatingInput" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingInput"> Firma Responsable Registro Personal </label>
               </div>
             </div>
             <div className="col-12 col-lg-4">
               <div className="form-floating">
-                <input type="text" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="text" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Aclaración </label>
               </div>
             </div>
             <div className="col-12 col-lg-4">
               <div className="form-floating">
-                <input type="date" className="form-control" id="floatingPassword" placeholder="Password" />
+                <input type="date" className="form-control" id="floatingPassword" disabled={fieldDisabled} />
                 <label className="col-form-label-sm" for="floatingPassword"> Fecha Registro SIU-PAMPA </label>
               </div>
             </div>
@@ -423,8 +432,29 @@ const Form = ({ onSubmit }) => {
         </div>
       </div>
       <div className="d-flex justify-content-center mt-3">
-        <button type="submit" className="btn btn-secondary me-3">Generar PDF</button>
-        <a hidden href="mailto:?subject=Presentación de Comisión de Servicios&body=Adjunto%20el%20PDF%20generado." class="btn btn-primary">Enviar Email</a>
+        <button 
+          type="button" 
+          className="btn btn-secondary me-3" 
+          onClick={handleButtonClick}
+          disabled={loading}
+        >
+          {formData ? 'Nueva Solicitud' : (loading ? 'Generando PDF...' : 'Generar PDF')}
+        </button>
+        {formData && (
+          <PDFDownloadLink
+            document={<PDFDocument data={formData} />}
+            fileName="cs_uaco.pdf"
+          >
+            {({ loading: pdfLoading }) => {
+              handleLinkLoading(pdfLoading);
+              return (
+                <button type="button" className="btn btn-secondary me-3">
+                  {pdfLoading ? 'Generando PDF...' : 'Descargar PDF'}
+                </button>
+              );
+            }}
+          </PDFDownloadLink>
+        )}
       </div>
     </form>
   );
