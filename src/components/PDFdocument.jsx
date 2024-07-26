@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
 });
 
 // Componente de documento
-const PDFDocument = ({ data }) => (
+const PDFDocument = ({ data, selectedCheckboxes }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* ENCABEZADO */}
@@ -181,79 +181,78 @@ const PDFDocument = ({ data }) => (
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
-            {/* Primer fila de datos */}
+            {/* Solicitud */}
             <View style={[styles.tableRow, {}]}>
               <Text style={[styles.tableCol, { textAlign: 'right', paddingRight: 15, width: 50 }]}>Corresponde</Text>
               <Text style={[styles.tableColFixed, { paddingTop: 3 }]}>COMISION DE SERVICIOS</Text>
-              <Text style={[styles.tableCol, { width: 25 }]}> X </Text>
+              <Text style={[styles.tableCol, { flex:1, width: 50}]}> {selectedCheckboxes.comision ? 'X' : ' '} </Text>
               <Text style={[styles.tableColFixed, { paddingTop: 3 }]}>RENDICIÓN POR LICENCIA</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol, { width: 25 }]}> X </Text>
+              <Text style={[styles.tableCol, styles.lastRowCol, { width: 25 }]}> {selectedCheckboxes.rendicion ? 'X' : ' '} </Text>
             </View>
-            {/* Segunda fila con la columna combinada */}
+            {/* Datos */}
             <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>x-xxxxxxxx/x</Text>
-              <Text style={styles.tableCol}>DNI</Text>
-              <Text style={styles.tableCol}>00000000</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>PI291234</Text>
+              <Text style={styles.tableCol}>{data.legajo}</Text>
+              <Text style={styles.tableCol}>{data.tipoDocumento}</Text>
+              <Text style={styles.tableCol}>{data.documento}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}>PI29/B{data.proyecto}</Text>
             </View>
-            {/* Tercera fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={styles.tableColFixed}>N° LEGAJO / CUIT</Text>
               <Text style={styles.tableColFixed}>TIPO DOCUMENTO</Text>
               <Text style={styles.tableColFixed}>NRO. DOCUMENTO</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>PROYECTO DE INVESTIGACION</Text>
             </View>
-            {/* Cuarta fila de datos */}
+            {/* Motivo */}
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}>{data.motivo}</Text>
             </View>
-            {/* Quinta fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>MOTIVO DE LA COMISIÓN DE SERVICIOS</Text>
             </View>
-            {/* Sexta fila de datos */}
+            {/* Transporte */}
             <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}>{data.destino}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}>{data.tipoTransporte}</Text>
             </View>
-            {/* Septima fila de datos */}
             <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol, {height: 14}]}></Text>
             </View>
-            {/* Octava fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={styles.tableColFixed}>DESTINO</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>TIPO DE TRANSPORTE</Text>
             </View>
-            {/* Novena fila de datos */}
+            {/* Fecha y Hora de Salida y Llegada */}
             <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}>{formatDate(data.fechaPartida)}</Text>
+              <Text style={styles.tableCol}>{data.horaPartida}</Text>
+              <Text style={styles.tableCol}>{formatDate(data.fechaLlegada)}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}>{data.horaLlegada}</Text>
             </View>
-            {/* Decima fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={styles.tableColFixed}>FECHA ESTIMADA DE PARTIDA</Text>
               <Text style={styles.tableColFixed}>HORA ESTIMADA DE PARTIDA</Text>
               <Text style={styles.tableColFixed}>FECHA ESTIMADA DE LLEGADA</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>HORA ESTIMADA DE LLEGADA</Text>
             </View>
-            {/* Decimoprimera fila de datos */}
+            {/* Observaciones */}
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol, {height: 15 }]}>{data.observacionesSolicitante}</Text>
             </View>
-            {/* Decimosegunda fila de datos */}
+
             <View style={styles.tableRow}>
-              <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>OBSERVACIONES</Text>
+              <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10}]}>OBSERVACIONES</Text>
             </View>
-            {/* Decimotercera fila de datos */}
+            {/* Firma / Aclaración */}
             <View style={[styles.tableRow, { height: 40 }]}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}>{data.firmaSolicitante}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}>{data.aclaracionSolicitante}</Text>
             </View>
-            {/* Decimocuarta fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA DEL SOLICITANTE</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0 }]}>SELLO / ACLARACIÓN</Text>
@@ -265,49 +264,47 @@ const PDFDocument = ({ data }) => (
 
       {/* SECCION 2 */}
       <View style={styles.container}>
-        <View style={[styles.rotatedTextContainer,{height: 113}]}>
+        <View style={[styles.rotatedTextContainer,{height: 115}]}>
           <Text style={[styles.rotatedText,{marginTop:110, paddingTop:2, paddingBottom:1}]}> 2. PARA SER COMPLETADO </Text>
           <Text style={[styles.rotatedText,{marginTop:-8, paddingTop:11}]}> POR EL AUTORIZANTE </Text>
 
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
-            {/* Primer fila de datos */}
+            {/* Titulo */}
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>AUTORIZACIÓN DE COMISIÓN DE SERVICIOS</Text>
             </View>
-            {/* Segunda fila con la columna combinada */}
-            <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>SI</Text>
-              <Text style={styles.tableCol}>NO</Text>
-              <Text style={styles.tableCol}>SI</Text>
-              <Text style={styles.tableCol}>NO</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>00/00/0000</Text>
+            {/* Autorizacion */}
+            <View style={[styles.tableRow, {height:16}]}>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}>{data.viaticos}</Text>
+              <Text style={styles.tableCol}>{data.movilidad}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Tercera fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={styles.tableColFixed}>CARGO</Text>
               <Text style={styles.tableColFixed}>VIÁTICOS</Text>
               <Text style={styles.tableColFixed}>MOVILIDAD</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>FECHA DE AUTORIZACIÓN</Text>
             </View>
-            {/* Cuarta fila de datos */}
-            <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+            {/* Datos Autorizante */}
+            <View style={[styles.tableRow, {height:16}]}>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Quinta fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={styles.tableColFixed}>APELLIDO DEL AUTORIZANTE</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>NOMBRES DEL AUTORIZANTE</Text>
             </View>
-            {/* Sexta fila de datos */}
+            {/* Firma / Aclaracion */}
             <View style={[styles.tableRow, { height: 40 }]}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Septima fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA DEL SOLICITANTE</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0 }]}>SELLO / ACLARACIÓN</Text>
@@ -326,17 +323,17 @@ const PDFDocument = ({ data }) => (
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
-            {/* Primer fila de datos */}
+            {/* Titulo */}
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>PROTOCOLIZACIÓN DE LA COMISIÓN DE SERVICIOS</Text>
             </View>
-            {/* Segunda fila de datos */}
+            {/* Firma */}
             <View style={[styles.tableRow, { height: 40 }]}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Tercera fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA DEPARTAMENTO DE DESPACHO</Text>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>UNIDAD DE GESTIÓN</Text>
@@ -349,61 +346,61 @@ const PDFDocument = ({ data }) => (
 
       {/* SECCION 4 */}
       <View style={styles.container}>
-        <View style={[styles.rotatedTextContainer,{height: 139.5}]}>
+        <View style={[styles.rotatedTextContainer,{height: 141.5}]}>
           <Text style={[styles.rotatedText,{marginTop:140, paddingTop:2, paddingBottom:1}]}> 4. PARA SER COMPLETADO POR EL</Text>
           <Text style={[styles.rotatedText,{marginTop:-8, paddingTop:11}]}> RESPONSABLE ECONÓMICO </Text>
 
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
-            {/* Primer fila de datos */}
+            {/* Titulo */}
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>PAGO DE VIÁTICOS Y PASAJES – RESPONSABLE ECONÓMICO DEL PROYECTO DE INVESTIGACIÓN</Text>
             </View>
-            {/* Segunda fila con la columna combinada */}
-            <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>00/00/0000</Text>
+            {/* Viaticos */}
+            <View style={[styles.tableRow,{height:16}]}>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Tercera fila de datos */}
-            <View style={styles.tableRow}>
-              <Text style={styles.tableColFixed}>TOTAL VIÁTICOS LIQUIDADOS ($)</Text>
-              <Text style={styles.tableColFixed}>CANTIDAD DE DÍAS</Text>
-              <Text style={styles.tableColFixed}>MONTO DIARIO DEL VIÁTICO ($)</Text>
-              <Text style={[styles.tableColFixed, styles.lastRowCol]}>FECHA DE PAGO</Text>
-            </View>
-            {/* Cuarta fila con la columna combinada */}
-            <View style={styles.tableRow}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>00/00/0000</Text>
-            </View>
-            {/* Quinta fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={styles.tableColFixed}>TOTAL VIÁTICOS LIQUIDADOS ($)</Text>
               <Text style={styles.tableColFixed}>CANTIDAD DE DÍAS</Text>
               <Text style={styles.tableColFixed}>MONTO DIARIO DEL VIÁTICO ($)</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>FECHA DE PAGO</Text>
             </View>
-            {/* Sexta fila de datos */}
-            <View style={styles.tableRow}>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+            {/* Movilidad */}
+            <View style={[styles.tableRow,{height:16}]}>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Septima fila de datos */}
+
+            <View style={styles.tableRow}>
+              <Text style={styles.tableColFixed}>TOTAL GASTOS DE MOVILIDAD ($)</Text>
+              <Text style={styles.tableColFixed}>PASAJES AÉREOS ($)</Text>
+              <Text style={styles.tableColFixed}>PASAJES TERRESTRES ($)</Text>
+              <Text style={[styles.tableColFixed, styles.lastRowCol]}>COMBUSTIBLE ($)</Text>
+            </View>
+            {/* Observaciones */}
+            <View style={[styles.tableRow,{height:16}]}>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
+            </View>
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>OBSERVACIONES</Text>
             </View>
-            {/* Octava fila de datos */}
+            {/* Firma */}
             <View style={[styles.tableRow, { height: 40 }]}>
               <Text style={styles.tableCol}>RECIBÍ CONFORME</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Novena fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA DEL BENEFICIARIO</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0 }]}>ACLARACIÓN</Text>
@@ -420,17 +417,17 @@ const PDFDocument = ({ data }) => (
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
-            {/* Primer fila de datos */}
+            {/* Titulo */}
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>REGISTRO DE LA COMISIÓN DE SERVICIOS EN EL SIU - PAMPA</Text>
             </View>
-            {/* Segunda fila de datos */}
+            {/* Firma */}
             <View style={[styles.tableRow, { height: 40 }]}>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={styles.tableCol}>N/A</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>N/A</Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
-            {/* Tercera fila de datos */}
+
             <View style={styles.tableRow}>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA RESPONSABLE REGISTRO PERSONAL</Text>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>ACLARACIÓN</Text>

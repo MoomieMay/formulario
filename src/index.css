@@ -92,11 +92,6 @@ input[type=number] { -appearance:textfield; }
   }
 }
 
-.card-disabled {
-  opacity: 0.5; /* Reduce la opacidad para dar la apariencia de deshabilitado */
-  pointer-events: none; /* Desactiva la interacción con la tarjeta */
-}
-
 .header-title{
   font-weight: 700;
   color: #006066 !important;
