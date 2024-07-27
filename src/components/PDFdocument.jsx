@@ -405,7 +405,7 @@ const PDFDocument = ({ data, selectedCheckboxes, imageUrl }) => (
             </View>
             {/* Firma */}
             <View style={[styles.tableRow, { height: 40 }]}>
-              <Text style={styles.tableCol}>RECIBÍ CONFORME</Text>
+              <Text style={[styles.tableCol, {textAlign: 'left'}]}>RECIBÍ CONFORME</Text>
               <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
 

@@ -6,13 +6,11 @@ import Popup from "reactjs-popup";
 import SignaturePad from "react-signature-canvas";
 
 const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm }) => {
-  const { register, handleSubmit, reset, watch, formState: { errors }, setError, clearErrors } = useForm();
+  const { register, handleSubmit, reset, formState: { errors }, setError, clearErrors } = useForm();
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({ comision: false, rendicion: false });
   const [fieldDisabled, setfieldDisabled] = React.useState(true);
   const [viaticosEnabled, setViaticosEnabled] = useState(false);
   const [movilidadEnabled, setMovilidadEnabled] = useState(false);
-  const viaticosOptions = watch('viaticosOptions');
-  const movilidadOptions = watch('movilidadOptions');
   const [cantDias, setCantDias] = useState('');
   const [montoDiario, setMontoDiario] = useState('');
   const [totalViaticos, setTotalViaticos] = useState('');
@@ -20,7 +18,6 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
   const [terrestres, setTerrestres] = useState('');
   const [combustible, setCombustible] = useState('');
   const [totalMovilidad, setTotalMovilidad] = useState('');
-
 
   const handleButtonClick = () => {
     if (formData) {
@@ -39,8 +36,6 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
       clearErrors('firmaSolicitante');
       setImageURL(null);
       setSelectedImage(null);
-
-
     } else {
       handleSubmit((data) => {
         if (selectedCheckboxes.comision || selectedCheckboxes.rendicion) {
@@ -48,19 +43,28 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
             setError('firmaSolicitante', { type: 'manual', message: 'Debe firmar o cargar una imagen.' });
             return;
           }
-          console.log(data); 
-          onSubmit({ ...data, selectedCheckboxes, imageURL });
+          // Preparar los datos para el envío
+          const finalData = {
+            ...data,
+            selectedCheckboxes,
+            imageURL,
+            viaticosOptions: viaticosEnabled ? 'SI': 'NO',
+            cantDias: viaticosEnabled ? cantDias : undefined,
+            montoDiario: viaticosEnabled ? Number(montoDiario).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : undefined,
+            totalViaticos: viaticosEnabled ? Number(totalViaticos).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : undefined,
+            movilidadOptions: movilidadEnabled ? 'SI': 'NO',
+            totalMovilidad: movilidadEnabled ? Number(totalMovilidad).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : undefined,
+            aereos: (movilidadEnabled && aereos!=0) ? Number(aereos).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : undefined,
+            terrestres: (movilidadEnabled && terrestres!=0) ? Number(terrestres).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : undefined,
+            combustible: (movilidadEnabled && combustible!=0) ? Number(combustible).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : undefined,
+          };
+          console.log(finalData); 
+          onSubmit(finalData);
           setfieldDisabled(true);
           clearErrors('checkboxGroup');
         } else {
           setError('checkboxGroup', { type: 'manual', message: 'Debe seleccionar al menos una opción entre Comisión de Servicios y Rendición por licencia.' });
           setfieldDisabled(true);
-        }
-        // Validate if the user has selected any option
-        if (!viaticosOptions || !movilidadOptions) {
-          if (!viaticosOptions) setError('viaticosOptions', { type: 'manual', message: 'Debe seleccionar si solicita viáticos.' });
-          if (!movilidadOptions) setError('movilidadOptions', { type: 'manual', message: 'Debe seleccionar si solicita gastos de movilidad.' });
-          return;
         }
       })();
     }
@@ -89,18 +93,17 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
     }
   }, [cantDias, viaticosEnabled, montoDiario]);
 
-  useEffect(() => {
-    if (viaticosOptions === 'SI') {
-      setViaticosEnabled(true);
+  const handleViaticosRadioChange = (event) => {
+    const isEnabled = event.target.value === 'SI';
+    setViaticosEnabled(isEnabled);
+    if (isEnabled) {
       setMontoDiario(25000);
     } else {
-      setViaticosEnabled(false);
       setCantDias('');
       setTotalViaticos('');
       setMontoDiario('');
     }
-  }, [viaticosOptions]);
-
+  };
 
   useEffect(() => {
     if (movilidadEnabled && (aereos || terrestres || combustible)) {
@@ -110,16 +113,15 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
     }
   }, [aereos, terrestres, combustible, movilidadEnabled]);
 
-  useEffect(() => {
-    if (movilidadOptions === 'SI') {
-      setMovilidadEnabled(true);
-    } else {
-      setMovilidadEnabled(false);
+  const handleMovilidadRadioChange = (event) => {
+    const isEnabled = event.target.value === 'SI';
+    setMovilidadEnabled(isEnabled);
+    if (!isEnabled) {
       setAereos('');
       setTerrestres('');
       setCombustible('');
     }
-  }, [movilidadOptions]);
+  };
 
 
   /* POPUP PARA FIRMA */
@@ -171,15 +173,15 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
         <div className="row">
           <div className="col-12 col-md-4 mb-3">
             <label className="col-form-label-sm">Apellido/s</label>
-            <input className="form-control" {...register('apellido', { required: false })} />
+            <input className="form-control" {...register('apellido', { required: true })} />
           </div>
           <div className="col-12 col-md-4 mb-3">
             <label className="col-form-label-sm">Nombres (Completo)</label>
-            <input className="form-control" {...register('nombre', { required: false })} />
+            <input className="form-control" {...register('nombre', { required: true })} />
           </div>
           <div className="col-12 col-md-4 mb-3">
             <label className="col-form-label-sm">Fecha de Solicitud</label>
-            <input className="form-control" type='date' {...register('fechaSolicitud', { required: false })} />
+            <input className="form-control" type='date' {...register('fechaSolicitud', { required: true })} />
           </div>
         </div>
       </div>
@@ -213,7 +215,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
           <div className="row mx-3">
             <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="legajo" placeholder="" {...register('legajo', { required: false })} />
+                <input type="text" className="form-control" id="legajo" placeholder="" {...register('legajo', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="legajo"> N° Legajo/CUIT </label>
               </div>
             </div>
@@ -232,7 +234,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
 
             <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
-                <input type="number" className="form-control" id="documento" placeholder="" {...register('documento', { required: false })} />
+                <input type="number" className="form-control" id="documento" placeholder="" {...register('documento', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="documento">N° Documento</label>
               </div>
             </div>
@@ -241,7 +243,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
             </div>
             <div className="col-9 col-md-4 col-lg-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="proyecto" placeholder="" {...register('proyecto', { required: false })} />
+                <input type="number" className="form-control" id="proyecto" placeholder="" {...register('proyecto', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="proyecto">Proyecto de Investigación</label>
               </div>
             </div>
@@ -250,7 +252,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
           <div className="row mx-3">
             <div className="col-12 mb-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="motivo" placeholder="" {...register('motivo', { required: false })} />
+                <input type="text" className="form-control" id="motivo" placeholder="" {...register('motivo', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="motivo">Motivo de la Comisión de Servicios</label>
               </div>
             </div>
@@ -259,13 +261,13 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
           <div className="row mx-3">
             <div className="col-12 col-md-6 mb-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="destino" placeholder="" {...register('destino', { required: false })} />
+                <input type="text" className="form-control" id="destino" placeholder="" {...register('destino', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="destino"> Destino </label>
               </div>
             </div>
             <div className="col-12 col-md-6 mb-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="tipoTransporte" placeholder="" {...register('tipoTransporte', { required: false })} />
+                <input type="text" className="form-control" id="tipoTransporte" placeholder="" {...register('tipoTransporte', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="tipoTransporte"> Tipo de Transporte </label>
               </div>
             </div>
@@ -274,25 +276,25 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
           <div className="row mx-3">
             <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
-                <input type="date" className="form-control" id="fechaPartida" placeholder="" {...register('fechaPartida', { required: false })} />
+                <input type="date" className="form-control" id="fechaPartida" placeholder="" {...register('fechaPartida', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="fechaPartida"> Fecha Estimada de Partida </label>
               </div>
             </div>
             <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
-                <input type="time" className="form-control" id="horaPartida" placeholder="" {...register('horaPartida', { required: false })} />
+                <input type="time" className="form-control" id="horaPartida" placeholder="" {...register('horaPartida', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="horaPartida"> Hora Estimada de Partida </label>
               </div>
             </div>
             <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
-                <input type="date" className="form-control" id="fechaLlegada" placeholder="" {...register('fechaLlegada', { required: false })} />
+                <input type="date" className="form-control" id="fechaLlegada" placeholder="" {...register('fechaLlegada', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="fechaLlegada"> Fecha Estimada de Llegada </label>
               </div>
             </div>
             <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className="form-floating">
-                <input type="time" className="form-control" id="horaLlegada" placeholder="" {...register('horaLlegada', { required: false })} />
+                <input type="time" className="form-control" id="horaLlegada" placeholder="" {...register('horaLlegada', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="horaLlegada"> Hora Estimada de Llegada </label>
               </div>
             </div>
@@ -373,7 +375,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
 
             <div className="col-12 col-md-12 col-lg-6 mb-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="aclaracionSolicitante" placeholder="" {...register('aclaracionSolicitante', { required: false })} />
+                <input type="text" className="form-control" id="aclaracionSolicitante" placeholder="" {...register('aclaracionSolicitante', { required: true })} />
                 <label className="col-form-label-sm" htmlFor="aclaracionSolicitante"> Sello/Aclaración </label>
               </div>
             </div>
@@ -405,7 +407,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
                 <div className="row mb-0" >
                   <div className="col-auto mb-0">
                     <div className="form-check" >
-                      <input className="form-check-input" type="radio" name="viaticosOptions" id="viaticosSi" value="SI" {...register('viaticosOptions', { required: "Debe seleccionar si solicita viáticos." })} />
+                      <input className="form-check-input" type="radio" name="viaticosOptions" id="viaticosSI" value="SI" onChange={handleViaticosRadioChange}/>
                       <label className="form-check-label col-form-label-sm" htmlFor="viaticosSi">
                         Si
                       </label>
@@ -413,7 +415,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
                   </div>
                   <div className="col-auto mb-0">
                     <div className="form-check">
-                      <input className="form-check-input" type="radio" name="viaticosOptions" id="viaticosNo" value="NO" {...register('viaticosOptions', { required: "Debe seleccionar si solicita viáticos." })} />
+                      <input className="form-check-input" type="radio" name="viaticosOptions" id="viaticosNO" value="NO" onChange={handleViaticosRadioChange} />
                       <label className="form-check-label col-form-label-sm" htmlFor="viaticosNo">
                         No
                       </label>
@@ -432,7 +434,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
                 <div className="row mb-0">
                   <div className="col-auto mb-0">
                     <div className="form-check">
-                      <input className="form-check-input" type="radio" name="movilidadOptions" id="MovilidadSi" value="SI" {...register('movilidadOptions', { required: "Debe seleccionar si solicita gastos de movilidad." })} />
+                      <input className="form-check-input" type="radio" name="movilidadOptions" id="MovilidadSi" value="SI" onChange={handleMovilidadRadioChange}/>
                       <label className="form-check-label col-form-label-sm" htmlFor="MovilidadSi">
                         Si
                       </label>
@@ -440,7 +442,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
                   </div>
                   <div className="col-auto mb-0">
                     <div className="form-check">
-                      <input className="form-check-input" type="radio" name="movilidadOptions" id="MovilidadNo" value="NO" {...register('movilidadOptions', { required: "Debe seleccionar si solicita gastos de movilidad." })}/>
+                      <input className="form-check-input" type="radio" name="movilidadOptions" id="MovilidadNo" value="NO" onChange={handleMovilidadRadioChange}/>
                       <label className="form-check-label col-form-label-sm" htmlFor="MovilidadNo">
                         No
                       </label>
@@ -530,19 +532,19 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
           <div className="row mx-3">
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="totalViaticos" value={totalViaticos}  readOnly {...register('totalViaticos')}/>
+                <input type="number" className="form-control" id="totalViaticos" value={totalViaticos} disabled={fieldDisabled} />
                 <label className="col-form-label-sm" htmlFor="totalViaticos"> Total Viáticos Liquidados ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="cantDias" value={cantDias} onChange={(e) => setCantDias(Number(e.target.value))} disabled={!viaticosEnabled} {...register('cantDias')}/>
+                <input type="number" className="form-control" id="cantDias" value={cantDias} onChange={(e) => setCantDias(Number(e.target.value))} disabled={!viaticosEnabled} />
                 <label className="col-form-label-sm" htmlFor="cantDias"> Cantidad de Días </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="montoDiario" value={montoDiario} readOnly  {...register('montoDiario')}/>
+                <input type="number" className="form-control" id="montoDiario" value={montoDiario} disabled={fieldDisabled} />
                 <label className="col-form-label-sm" htmlFor="montoDiario"> Monto Diario del Viático ($) </label>
               </div>
             </div>
@@ -557,25 +559,25 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
           <div className="row mx-3">
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="totalMovilidad" value={totalMovilidad} disabled={fieldDisabled} readOnly {...register('totalMovilidad')}/>
+                <input type="number" className="form-control" id="totalMovilidad" value={totalMovilidad} disabled={fieldDisabled} />
                 <label className="col-form-label-sm" htmlFor="totalMovilidad"> Total Gastos de Movilidad </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="aereos" value={aereos} onChange={(e) => setAereos(Number(e.target.value))} disabled={!movilidadEnabled} {...register('aereos')}/>
+                <input type="number" className="form-control" id="aereos" value={aereos} onChange={(e) => setAereos(Number(e.target.value))} disabled={!movilidadEnabled} />
                 <label className="col-form-label-sm" htmlFor="aereos"> Pasajes Aereos ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="terrestres" value={terrestres} onChange={(e) => setTerrestres(Number(e.target.value))} disabled={!movilidadEnabled} {...register('terrestres')}/>
+                <input type="number" className="form-control" id="terrestres" value={terrestres} onChange={(e) => setTerrestres(Number(e.target.value))} disabled={!movilidadEnabled}  />
                 <label className="col-form-label-sm" htmlFor="terrestres"> Pasajes Terrestres ($) </label>
               </div>
             </div>
             <div className="col-12 col-lg-3 col-md-6">
               <div className="form-floating">
-                <input type="number" className="form-control" id="combustible" value={combustible} onChange={(e) => setCombustible(Number(e.target.value))} disabled={!movilidadEnabled} {...register('combustible')}/>
+                <input type="number" className="form-control" id="combustible" value={combustible} onChange={(e) => setCombustible(Number(e.target.value))} disabled={!movilidadEnabled}  />
                 <label className="col-form-label-sm" htmlFor="combustible"> Combustible ($) </label>
               </div>
             </div>
