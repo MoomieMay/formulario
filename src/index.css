@@ -1,5 +1,6 @@
 /* src/index.css */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f8f8f8;
@@ -17,7 +18,7 @@ body {
 }
 
 
-.navbar p{
+.navbar p {
   color: rgb(72, 72, 72);
   margin: 0;
 }
@@ -59,40 +60,111 @@ form .btn:hover {
   background-color: #436a6c;
 }
 
+form .btn-firma {
+  background-color: #6c757d;
+
+}
+
+form .btn-firma:hover {
+  color: white;
+}
+
+
+.signatureCanvas {
+  background-color: white;
+  width: 100%;
+  min-height: 100%;
+  min-height: 300px;
+  max-height: 500px;
+}
+
+.signatureBtn{
+  background-color: #006066;
+  color: white;
+  margin:10px;
+}
+
+.signatureBtn:hover{
+  background-color: #436a6c;
+  color: white;
+  margin:10px;
+}
+
+.popup-content{
+  background-color: whitesmoke;
+  border: #006066 solid 1px;
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
+}
+
+.marcoFirma{
+  border: whitesmoke 1px solid;
+  padding: 10px;
+}
+
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+}
+
+.custom-file-upload button {
+  margin-right: 10px;
+}
+
+.custom-file-upload span {
+  font-size: 0.9em;
+  color: #555;
+}
+
+
+
+
+
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-    }
-input[type=number] { -appearance:textfield; }
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -appearance: textfield;
+}
 
 /* Media query para dispositivos móviles */
 @media (max-width: 768px) {
   .card-body {
-    padding: 5px; /* Reducir el padding para pantallas móviles */
+    padding: 5px;
+    /* Reducir el padding para pantallas móviles */
   }
 }
 
 /* Media query para dispositivos móviles */
 @media (max-width: 768px) {
   .col-12 {
-    padding: 5px; /* Reducir el padding para pantallas móviles */
+    padding: 5px;
+    /* Reducir el padding para pantallas móviles */
   }
 }
 
 
 /* Estilos base para los card-title */
 .card-title {
-  font-size: 1rem; /* Tamaño de letra base */
+  font-size: 1rem;
+  /* Tamaño de letra base */
 }
+
 /* Media query para dispositivos móviles */
 @media (max-width: 768px) {
   .card-title {
-    font-size: 0.875rem; /* Reducir el tamaño de letra para pantallas móviles */
+    font-size: 0.875rem;
+    /* Reducir el tamaño de letra para pantallas móviles */
   }
 }
 
-.header-title{
+.header-title {
   font-weight: 700;
   color: #006066 !important;
 }

@@ -10,6 +10,14 @@ const formatDate = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
+const currentDate = new Date();
+
+const dd = String(currentDate.getDate()).padStart(2, '0'); 
+const mm = currentDate.toLocaleDateString('es-ES', { month: 'long' });
+const aaaa = currentDate.getFullYear(); 
+const nn = currentDate.toLocaleDateString('es-ES', { weekday: 'long' });
+
+
 // Definición de estilos
 const styles = StyleSheet.create({
   page: {
@@ -144,7 +152,7 @@ const styles = StyleSheet.create({
 });
 
 // Componente de documento
-const PDFDocument = ({ data, selectedCheckboxes }) => (
+const PDFDocument = ({ data, selectedCheckboxes, imageUrl }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* ENCABEZADO */}
@@ -177,7 +185,7 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
       {/* SECCION 1 */}
       <View style={styles.container}>
         <View style={styles.rotatedTextContainer}>
-          <Text style={styles.rotatedText}> 1. PARA SER COMPLETADO POR EL SOLICITANTE </Text>
+          <Text style={[styles.rotatedText, {marginLeft: -5, marginRight:5}]}> 1. PARA SER COMPLETADO POR EL SOLICITANTE </Text>
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
@@ -185,7 +193,7 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
             <View style={[styles.tableRow, {}]}>
               <Text style={[styles.tableCol, { textAlign: 'right', paddingRight: 15, width: 50 }]}>Corresponde</Text>
               <Text style={[styles.tableColFixed, { paddingTop: 3 }]}>COMISION DE SERVICIOS</Text>
-              <Text style={[styles.tableCol, { flex:1, width: 50}]}> {selectedCheckboxes.comision ? 'X' : ' '} </Text>
+              <Text style={[styles.tableCol, { flex: 1, width: 50 }]}> {selectedCheckboxes.comision ? 'X' : ' '} </Text>
               <Text style={[styles.tableColFixed, { paddingTop: 3 }]}>RENDICIÓN POR LICENCIA</Text>
               <Text style={[styles.tableCol, styles.lastRowCol, { width: 25 }]}> {selectedCheckboxes.rendicion ? 'X' : ' '} </Text>
             </View>
@@ -218,7 +226,7 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
             </View>
             <View style={styles.tableRow}>
               <Text style={styles.tableCol}></Text>
-              <Text style={[styles.tableCol, styles.lastRowCol, {height: 14}]}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol, { height: 14 }]}></Text>
             </View>
 
             <View style={styles.tableRow}>
@@ -241,21 +249,23 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
             </View>
             {/* Observaciones */}
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCol, styles.lastRowCol, {height: 15 }]}>{data.observacionesSolicitante}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol, { height: 15 }]}>{data.observacionesSolicitante}</Text>
             </View>
 
             <View style={styles.tableRow}>
-              <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10}]}>OBSERVACIONES</Text>
+              <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>OBSERVACIONES</Text>
             </View>
+
             {/* Firma / Aclaración */}
             <View style={[styles.tableRow, { height: 40 }]}>
-              <Text style={styles.tableCol}>{data.firmaSolicitante}</Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}>{data.aclaracionSolicitante}</Text>
+              <View style={{ flex: 1, height: 'auto', marginLeft: 80, marginBottom: 5, marginRight: -75, textAlign: 'center' }}>
+                <Image src={imageUrl} style={{ height: 30, width: 75, marginTop: 7 }} /> </View>
+              <Text style={[styles.tableCol, styles.lastRowCol, { width: '50%', borderBottomWidth: 0, borderLeftWidth: 1, paddingTop: 15, marginLeft: 1 }]}>{data.aclaracionSolicitante}</Text>
             </View>
 
             <View style={styles.tableRow}>
-              <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA DEL SOLICITANTE</Text>
-              <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0 }]}>SELLO / ACLARACIÓN</Text>
+              <Text style={[styles.tableColFixed, { borderBottomWidth: 0, borderTopWidth: 1 }]}>FIRMA DEL SOLICITANTE</Text>
+              <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0, borderTopWidth: 1 }]}>SELLO / ACLARACIÓN</Text>
             </View>
           </View>
         </View>
@@ -264,9 +274,9 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
 
       {/* SECCION 2 */}
       <View style={styles.container}>
-        <View style={[styles.rotatedTextContainer,{height: 115}]}>
-          <Text style={[styles.rotatedText,{marginTop:110, paddingTop:2, paddingBottom:1}]}> 2. PARA SER COMPLETADO </Text>
-          <Text style={[styles.rotatedText,{marginTop:-8, paddingTop:11}]}> POR EL AUTORIZANTE </Text>
+        <View style={[styles.rotatedTextContainer, { height: 115 }]}>
+          <Text style={[styles.rotatedText, { marginTop: 110, paddingTop: 2, paddingBottom: 1 }]}> 2. PARA SER COMPLETADO </Text>
+          <Text style={[styles.rotatedText, { marginTop: -8, paddingTop: 11 }]}> POR EL AUTORIZANTE </Text>
 
         </View>
         <View style={[styles.tableContainer]}>
@@ -276,10 +286,10 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>AUTORIZACIÓN DE COMISIÓN DE SERVICIOS</Text>
             </View>
             {/* Autorizacion */}
-            <View style={[styles.tableRow, {height:16}]}>
+            <View style={[styles.tableRow, { height: 16 }]}>
               <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}>{data.viaticos}</Text>
-              <Text style={styles.tableCol}>{data.movilidad}</Text>
+              <Text style={styles.tableCol}>{data.viaticosOptions}</Text>
+              <Text style={styles.tableCol}>{data.movilidadOptions}</Text>
               <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
 
@@ -290,7 +300,7 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>FECHA DE AUTORIZACIÓN</Text>
             </View>
             {/* Datos Autorizante */}
-            <View style={[styles.tableRow, {height:16}]}>
+            <View style={[styles.tableRow, { height: 16 }]}>
               <Text style={styles.tableCol}></Text>
               <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
@@ -316,9 +326,9 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
 
       {/* SECCION 3 */}
       <View style={styles.container}>
-        <View style={[styles.rotatedTextContainer,{height: 62.5}]}>
-          <Text style={[styles.rotatedText,{marginTop:65, paddingTop:2, paddingBottom:1}]}> 3. DESPACHO/ </Text>
-          <Text style={[styles.rotatedText,{marginTop:-8, paddingTop:11}]}> DECANATO </Text>
+        <View style={[styles.rotatedTextContainer, { height: 62.5 }]}>
+          <Text style={[styles.rotatedText, { marginTop: 65, paddingTop: 2, paddingBottom: 1 }]}> 3. DESPACHO/ </Text>
+          <Text style={[styles.rotatedText, { marginTop: -8, paddingTop: 11 }]}> DECANATO </Text>
 
         </View>
         <View style={[styles.tableContainer]}>
@@ -346,9 +356,9 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
 
       {/* SECCION 4 */}
       <View style={styles.container}>
-        <View style={[styles.rotatedTextContainer,{height: 141.5}]}>
-          <Text style={[styles.rotatedText,{marginTop:140, paddingTop:2, paddingBottom:1}]}> 4. PARA SER COMPLETADO POR EL</Text>
-          <Text style={[styles.rotatedText,{marginTop:-8, paddingTop:11}]}> RESPONSABLE ECONÓMICO </Text>
+        <View style={[styles.rotatedTextContainer, { height: 141.5 }]}>
+          <Text style={[styles.rotatedText, { marginTop: 140, paddingTop: 2, paddingBottom: 1 }]}> 4. PARA SER COMPLETADO POR EL</Text>
+          <Text style={[styles.rotatedText, { marginTop: -8, paddingTop: 11 }]}> RESPONSABLE ECONÓMICO </Text>
 
         </View>
         <View style={[styles.tableContainer]}>
@@ -358,11 +368,10 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
               <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>PAGO DE VIÁTICOS Y PASAJES – RESPONSABLE ECONÓMICO DEL PROYECTO DE INVESTIGACIÓN</Text>
             </View>
             {/* Viaticos */}
-            <View style={[styles.tableRow,{height:16}]}>
-              <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}></Text>
+            <View style={[styles.tableRow, { height: 16 }]}>
+              <Text style={styles.tableCol}>{data.totalViaticos}</Text>
+              <Text style={styles.tableCol}>{data.cantDias}</Text>
+              <Text style={styles.tableCol}>{data.montoDiario}</Text>
               <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
 
@@ -373,12 +382,11 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>FECHA DE PAGO</Text>
             </View>
             {/* Movilidad */}
-            <View style={[styles.tableRow,{height:16}]}>
-              <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}></Text>
-              <Text style={styles.tableCol}></Text>
-              <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
+            <View style={[styles.tableRow, { height: 16 }]}>
+              <Text style={styles.tableCol}>{data.totalMovilidad}</Text>
+              <Text style={styles.tableCol}>{data.aereos}</Text>
+              <Text style={styles.tableCol}>{data.terrestres}</Text>
+              <Text style={[styles.tableCol, styles.lastRowCol]}>{data.combustible}</Text>
             </View>
 
             <View style={styles.tableRow}>
@@ -388,7 +396,7 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
               <Text style={[styles.tableColFixed, styles.lastRowCol]}>COMBUSTIBLE ($)</Text>
             </View>
             {/* Observaciones */}
-            <View style={[styles.tableRow,{height:16}]}>
+            <View style={[styles.tableRow, { height: 16 }]}>
               <Text style={[styles.tableCol, styles.lastRowCol]}></Text>
             </View>
 
@@ -412,14 +420,14 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
 
       {/* SECCION 5 */}
       <View style={styles.container}>
-        <View style={[styles.rotatedTextContainer,{height: 62.5}]}>
-          <Text style={[styles.rotatedText,{marginTop:65, paddingTop:2, paddingBottom:1}]}> 5. PERSONAL </Text>
+        <View style={[styles.rotatedTextContainer, { height: 62.5 }]}>
+          <Text style={[styles.rotatedText, { marginTop: 65, marginLeft: 3.5, marginRight: -3.5, paddingTop: 2, paddingBottom: 1 }]}> 5. PERSONAL </Text>
         </View>
         <View style={[styles.tableContainer]}>
           <View style={styles.table}>
             {/* Titulo */}
             <View style={styles.tableRow}>
-              <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left', paddingLeft: 10 }]}>REGISTRO DE LA COMISIÓN DE SERVICIOS EN EL SIU - PAMPA</Text>
+              <Text style={[styles.tableColFixed, styles.lastRowCol, { textAlign: 'left' }]}>REGISTRO DE LA COMISIÓN DE SERVICIOS EN EL SIU - PAMPA</Text>
             </View>
             {/* Firma */}
             <View style={[styles.tableRow, { height: 40 }]}>
@@ -432,6 +440,37 @@ const PDFDocument = ({ data, selectedCheckboxes }) => (
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FIRMA RESPONSABLE REGISTRO PERSONAL</Text>
               <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>ACLARACIÓN</Text>
               <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0 }]}>FECHA REGISTRO SIU - PAMPA</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* TABLA FINAL */}
+      <View style={styles.container}>
+        <Text style={[styles.rotatedText, { marginTop: 120, paddingTop: 1, paddingBottom: 1, marginLeft: -20, marginRight: 0 }]}> Impreso en el PGGA - {nn} {dd} de {mm} de {aaaa} </Text>
+      </View>
+
+      <View style={[styles.container, { marginTop: -30, marginLeft: 0 }]}>
+        <View style={[styles.rotatedTextContainer, { height: 39.5, paddingLeft: 4, paddingRight: -2 }]}>
+          <Text style={[styles.rotatedText, { marginTop: 40, paddingTop: 1, paddingBottom: 1 }]}> DES </Text>
+          <Text style={[styles.rotatedText, { marginTop: 2, paddingTop: 9, paddingBottom: 2 }]}> PACHO </Text>
+        </View>
+        <View style={[styles.tableContainer]}>
+          <View style={styles.table}>
+            <View style={[styles.tableRow]}>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={styles.tableCol}></Text>
+              <Text style={[styles.tableCol, styles.lastRowCol, { height: 20 }]}></Text>
+            </View>
+
+            <View style={styles.tableRow}>
+              <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>NÚMERO DE COMISIÓN DE SERVICIOS</Text>
+              <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>ORIGINAL/COPIA NRO</Text>
+              <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>FECHA DE REGISTRO</Text>
+              <Text style={[styles.tableColFixed, { borderBottomWidth: 0 }]}>NRO. INT ORIG</Text>
+              <Text style={[styles.tableColFixed, styles.lastRowCol, { borderBottomWidth: 0, width: 80}]}>SC</Text>
             </View>
           </View>
         </View>
