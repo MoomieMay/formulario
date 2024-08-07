@@ -225,6 +225,7 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
                 <select className="form-select" id="tipoDocumento" {...register('tipoDocumento', { required: true })}>
                   <option value="" defaultValue>Seleccione una opción</option>
                   <option value="DNI">DNI</option>
+                  <option value="Pasaporte">Pasaporte</option>
                   <option value="Libreta Civica">Libreta Civica</option>
                   <option value="Libreta de Enrolamiento">Libreta de Enrolamiento</option>
                 </select>
@@ -267,7 +268,12 @@ const Form = ({ onSubmit, formData, loading, handleLinkLoading, handleResetForm 
             </div>
             <div className="col-12 col-md-6 mb-3">
               <div className="form-floating">
-                <input type="text" className="form-control" id="tipoTransporte" placeholder="" {...register('tipoTransporte', { required: true })} />
+              <select className="form-select" id="tipoDocumento" {...register('tipoDocumento', { required: true })}>
+                  <option value="" defaultValue>Seleccione una opción</option>
+                  <option value="Terrestre">Terrestre</option>
+                  <option value="Pasaporte">Aéreo</option>
+                  <option value="Vehiculo Particular">Vehículo Particular</option>
+                </select>
                 <label className="col-form-label-sm" htmlFor="tipoTransporte"> Tipo de Transporte </label>
               </div>
             </div>
