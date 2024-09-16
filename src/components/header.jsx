@@ -12,7 +12,7 @@ const Header = () => {
           </div>
           <div className="col text-start d-flex align-items-center">
             <p className="mb-0 fs-5 header-title">
-              Solicitud Y Rendición de Comisión de Servicios, Viáticos y Pasajes – PI – SECYT
+              Inscripción Alumno Ayudante Ad Honorem
             </p>
           </div>
         </div>

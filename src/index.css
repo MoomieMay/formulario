@@ -168,3 +168,8 @@ input[type=number] {
   font-weight: 700;
   color: #006066 !important;
 }
+
+.requisitos{
+  padding-left: 0;
+  font-weight: bold;
+}
